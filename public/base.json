@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "titulo": "CESTO PLAST.TELADO C/TAMPA 60L PT | Amazon.com.br",
+    "descricao": "PLASTICO TELADA PRETO 60 LITROS ",
+    "preco": "22,99",
+    "link": "https://www.amazon.com.br/",
+    "imagem": "lixeira",
+    "estado": "reservado"
+  },
+  {
+    "id": 2,
+    "titulo": "Escorredor de Lou&ccedil;a 12 Pratos 6 Copos Porta Talher Metaltru | Amazon.com.br",
+    "descricao": "Nossa eterna gratid&atilde;o &agrave; quem inventou os escorredores! Sempre sobram pratos, talheres e copos ap&oacute;s nossas refei&ccedil;&otilde;es, mas com o escorredor podemos agilizar as tarefas na cozinha. O Escorredor Aramado vai deixar sua rotina dom&eacute;stica muito mais pr&aacute;tica. Basta considerar o tamanho da sua pia e as nec&hellip;",
+    "preco": "60,64",
+    "link": "https://www.amazon.com.br/",
+    "imagem": "escorredor",
+    "estado": "disponivel"
+  },
+  {
+    "id": 3,
+    "titulo": "CESTO PLAST.TELADO C/TAMPA 60L PT | Amazon.com.br",
+    "descricao": "PLASTICO TELADA PRETO 60 LITROS ",
+    "preco": "22,99",
+    "link": "https://www.amazon.com.br/",
+    "imagem": "lixeira",
+    "estado": "disponivel"
+  },
+  {
+    "id": 4,
+    "titulo": "Escorredor de Lou&ccedil;a 12 Pratos 6 Copos Porta Talher Metaltru | Amazon.com.br",
+    "descricao": "Nossa eterna gratid&atilde;o &agrave; quem inventou os escorredores! Sempre sobram pratos, talheres e copos ap&oacute;s nossas refei&ccedil;&otilde;es, mas com o escorredor podemos agilizar as tarefas na cozinha. O Escorredor Aramado vai deixar sua rotina dom&eacute;stica muito mais pr&aacute;tica. Basta considerar o tamanho da sua pia e as nec&hellip;",
+    "preco": "60,64",
+    "link": "https://www.amazon.com.br/",
+    "imagem": "escorredor",
+    "estado": "disponivel"
+  },
+  {
+    "id": 5,
+    "titulo": "CESTO PLAST.TELADO C/TAMPA 60L PT | Amazon.com.br",
+    "descricao": "PLASTICO TELADA PRETO 60 LITROS ",
+    "preco": "22,99",
+    "link": "https://www.amazon.com.br/",
+    "imagem": "lixeira",
+    "estado": "disponivel"
+  },
+  {
+    "id": 6,
+    "titulo": "Escorredor de Lou&ccedil;a 12 Pratos 6 Copos Porta Talher Metaltru | Amazon.com.br",
+    "descricao": "Nossa eterna gratid&atilde;o &agrave; quem inventou os escorredores! Sempre sobram pratos, talheres e copos ap&oacute;s nossas refei&ccedil;&otilde;es, mas com o escorredor podemos agilizar as tarefas na cozinha. O Escorredor Aramado vai deixar sua rotina dom&eacute;stica muito mais pr&aacute;tica. Basta considerar o tamanho da sua pia e as nec&hellip;",
+    "preco": "60,64",
+    "link": "https://www.amazon.com.br/",
+    "imagem": "escorredor",
+    "estado": "disponivel"
+  }
+]
+

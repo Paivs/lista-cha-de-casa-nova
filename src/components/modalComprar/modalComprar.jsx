@@ -9,6 +9,7 @@ export default function ModalComprar({
   presente,
   isModalOpen,
   setIsModalOpen,
+  reload
 }) {
   const [step, setStep] = useState(0);
   const [nome, setNome] = useState("");
@@ -24,16 +25,45 @@ export default function ModalComprar({
       setStep(0);
       setNome("");
       setMensagem("");
+      
+      reload()
+
       setIsModalOpen(false);
   };
 
+  async function saveOnAPI() {
+    try {
+      const response = await fetch('/api/reservePresente', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: presente.id, estado: 'reservado', nomePreseteador: nome, recado: mensagem }),
+      });
+      
+      if (!response.ok) {
+        alert("Erro ao reservar: ", presente.nome)
+        throw new Error('Erro ao reservar presente');
+      }
+
+      // Handle success response
+    } catch (error) {
+      // setError(error.message);
+    }
+  }
+
   function handleSalvar(){
 
-    localStorage.setItem("nome", nome);
+    saveOnAPI().then(() => {
+      localStorage.setItem("nome", nome);
 
-    const presentes = JSON.parse(localStorage.getItem("presentes")) || [];
-    const novoPresente = [...presentes, presente];
-    localStorage.setItem("presentes", JSON.stringify(novoPresente));
+      const presentes = JSON.parse(localStorage.getItem("presentes")) || [];
+      const novoPresente = [...presentes, presente];
+      localStorage.setItem("presentes", JSON.stringify(novoPresente));
+    
+    }).catch((error) => {
+      return;
+    });
   }
 
   return (

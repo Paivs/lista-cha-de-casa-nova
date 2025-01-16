@@ -6,18 +6,26 @@ import {
   faShare,
   faGift,
   faWalkieTalkie,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import Item from "@/components/Item/item";
-import presentes from "../../public/base.json";
+import Recado from "@/components/Recado/recado";
+// import presentes from "../../public/base.json";
 import ModalComprar from "@/components/modalComprar/modalComprar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModalContribuir from "@/components/modalContribuir/modalContribuir";
+import ModalRecado from "@/components/modalRecado/modalRecado";
 
 export default function Home() {
   const [presente, setPresente] = useState({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [presentes, setPresentes] = useState([]);
+  const [recados, setRecados] = useState([]);
 
+  const [nome, setNome] = useState("");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalContribuirOpen, setIsModalContribuirOpen] = useState(false);
+  const [isModalRecadoOpen, setIsModalRecadoOpen] = useState(false);
 
   const [section, setSection] = useState("presentes");
 
@@ -25,6 +33,50 @@ export default function Home() {
   const [maxPrice, setMaxPrice] = useState("");
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
   const handleMaxPriceChange = (e) => setMaxPrice(e.target.value);
+
+  async function fetchPresentes() {
+    try {
+      const response = await fetch("/api/getAllPresentes");
+      if (!response.ok) {
+        throw new Error("Erro ao buscar presentes");
+      }
+      const data = await response.json();
+      setPresentes(data);
+    } catch (error) {
+      // setError(error.message);
+    }
+  }
+
+  async function fetchRecados() {
+    try {
+      const response = await fetch("/api/getAllRecados");
+      if (!response.ok) {
+        throw new Error("Erro ao buscar recados");
+      }
+      const data = await response.json();
+      setRecados(data);
+    } catch (error) {
+      // setError(error.message);
+    }
+  }
+
+  async function fetchNome() {
+    setNome(localStorage.getItem("nome"));
+    console.log("seu nome é: ", localStorage.getItem("nome"));
+  }
+
+  function fetchAll(){
+    fetchPresentes();
+    fetchRecados();
+    fetchNome();
+  }
+
+  useEffect(() => {
+    fetchPresentes();
+    fetchRecados();
+
+    fetchNome();
+  }, []);
 
   const filteredPresentes = presentes.filter((presente) => {
     const matchesSearch = presente.titulo
@@ -47,11 +99,18 @@ export default function Home() {
         presente={presente}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-      />
+        reload={fetchAll}
+        />
 
       <ModalContribuir
         isModalOpen={isModalContribuirOpen}
         setIsModalOpen={setIsModalContribuirOpen}
+        />
+
+      <ModalRecado
+        isModalOpen={isModalRecadoOpen}
+        setIsModalOpen={setIsModalRecadoOpen}
+        reload={fetchAll}
       />
 
       <div className="flex flex-col w-full text-center items-center justify-center pt-16 container mx-auto">
@@ -60,14 +119,14 @@ export default function Home() {
           alt="Logo Lívia e Gustavo"
           className="w-auto h-40 rounded-full"
         />
-        <h1 className="text-center text-xl md:text-2xl font-bold text-[#374151]">
+        <h1 className="text-center px-2 text-xl md:text-2xl font-bold text-[#374151]">
           Chá de casa nova da Lívia e do Gustavo
         </h1>
 
         <div className="w-full flex flex-col items-center justify-center gap-2 mt-2">
           <button
             type="button"
-            className="w-1/2 cursor-pointer bg-white p-1 border border-[#eceef1] h-auto text-center text-lg md:text-xl flex items-center justify-center shadow-md"
+            className="w-1/2 cursor-pointer bg-white p-1 border border-[#eceef1] h-auto text-center text-md md:text-xl flex items-center justify-center shadow-md"
             onClick={() => setIsModalContribuirOpen(true)}
           >
             <FontAwesomeIcon
@@ -79,7 +138,7 @@ export default function Home() {
 
           <button
             type="button"
-            className="w-1/2 cursor-pointer bg-white p-1 border border-[#eceef1] h-auto text-center text-lg md:text-xl flex items-center justify-center shadow-md"
+            className="w-1/2  cursor-pointer bg-white p-1 border border-[#eceef1] h-auto text-center text-md md:text-xl flex items-center justify-center shadow-md"
             onClick={() => {
               navigator.clipboard.writeText("livs-e-gu.com.br");
               alert("Link copiado!");
@@ -112,13 +171,16 @@ export default function Home() {
         </div>
       </div>
 
-      <section className="container mx-auto px-4 my-4">
+      <section className="container mx-auto px-3 my-4">
         <div className="flex flex-col md:flex-row gap-4">
           <button
             type="button"
             className="flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md"
-            onClick={() => {setSection("presentes")}}
-            >
+            onClick={() => {
+              setSection("presentes");
+              fetchPresentes()
+            }}
+          >
             <FontAwesomeIcon className="inline w-auto h-8 me-2" icon={faGift} />
             Presentes
           </button>
@@ -126,8 +188,11 @@ export default function Home() {
           <button
             type="button"
             className="flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md"
-            onClick={() => {setSection("recados")}}
-            >
+            onClick={() => {
+              setSection("recados");
+              fetchRecados();
+            }}
+          >
             <FontAwesomeIcon
               className="inline w-auto h-8 me-2"
               icon={faWalkieTalkie}
@@ -154,28 +219,60 @@ export default function Home() {
                 className="border p-2 shadow-sm"
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-3">
               {filteredPresentes.map((presente, index) => (
-                <Item
-                  key={index}
-                  presente={presente}
-                  onButtonClick={() => handleOpenModal(presente)}
-                />
+                  <Item
+                    key={index}
+                    presente={presente}
+                    isMine={presente.nomePresenteador === nome}
+                    onButtonClick={() => handleOpenModal(presente)}
+                  />
               ))}
             </div>
           </div>
         ) : null}
 
-        {section === "recados" ? 
-        <div className="p-4 mt-4">
-          <h2 className="text-5xl">Ainda sendo desenvolvida... tenha calma!</h2>
-        </div> 
-        : null}
+        {section === "recados" ? (
+          <>
+            <div className="md:hidden bg-[#878d98] h-1 w-full rounded-full my-6"></div>
 
+            <div className="w-full flex justify-end item-center container mx-auto ">
+              <button
+                type="button"
+                className="flex mb-3 items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md"
+                onClick={() => setIsModalRecadoOpen(true)}
+              >
+                <FontAwesomeIcon
+                  className="inline w-auto h-8 me-2"
+                  icon={faPlus}
+                />
+                Adicionar recado
+              </button>
+            </div>
+
+            <div className="flex flex-row flex-wrap gap-2 overflow-hidden mb-[25vh]">
+              {recados.map((recado, index) => (
+                <Recado
+                  key={index}
+                  mensagem={recado.recado}
+                  nome={recado.nome}
+                />
+              ))}
+            </div>
+          </>
+        ) : null}
       </section>
 
       <div className="mx-2 my-8">
-        <p className="text-center text-lg font-light">Desenvolvida por <a href="https://github.com/paivs" className="text-blue-500 hover:underline">Gustavo Paiva</a></p>
+        <p className="text-center text-lg font-light">
+          Desenvolvida por{" "}
+          <a
+            href="https://github.com/paivs"
+            className="text-blue-500 hover:underline"
+          >
+            Gustavo Paiva
+          </a>
+        </p>
       </div>
     </>
   );

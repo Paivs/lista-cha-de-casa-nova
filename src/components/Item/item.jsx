@@ -5,9 +5,13 @@ import { faCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import ModalComprar from "../modalComprar/modalComprar";
 import "./item.css";
 
-export default function Item({ presente, onButtonClick }) {
+export default function Item({ presente, onButtonClick, isMine }) {
   return (
-    <div className={`flex flex-col shadow-md justify-between border-gray-200 border p-2 ${presente.estado === "reservado" ? "bg-gray-300 opacity-80" : ""}`}>
+    <div
+      className={`flex flex-col shadow-md justify-between border-gray-200 border p-2 ${
+        presente.estado === "reservado" ? "bg-gray-300 opacity-80" : ""
+      }`}
+    >
       <div className="w-full flex items-center justify-center">
         <img
           src={`produtos/${presente.imagem}.jpg`}
@@ -29,7 +33,7 @@ export default function Item({ presente, onButtonClick }) {
 
         <button
           type="button"
-          className={`w-full flex gap-2 items-center justify-center ${
+          className={`relative w-full flex gap-2 items-center justify-center ${
             presente.estado === "reservado"
               ? "bg-gray-200 text-gray-500 cursor-not-allowed"
               : "text-blue-500 bg-white p-1 border border-[#eceef1] h-auto text-center text-xl"
@@ -43,9 +47,23 @@ export default function Item({ presente, onButtonClick }) {
             </>
           ) : (
             <>
-              <FontAwesomeIcon icon={faCircleXmark} className="w-auto h-8 p-1" />
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                className="w-auto h-8 p-1"
+              />
               Já reservado
             </>
+          )}
+
+          {isMine && (
+            <div
+              className="absolute -top-8 -right-2 translate-x-2 -translate-y-2 p-2 py-4 text-center rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center"
+              style={{ zIndex: 999 }}
+            >
+              <p className="text-sm text-white font-bold">
+                EU <br /> COMPREI!
+              </p>
+            </div>
           )}
         </button>
       </div>

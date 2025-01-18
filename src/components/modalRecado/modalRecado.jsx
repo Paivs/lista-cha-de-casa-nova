@@ -64,7 +64,7 @@ export default function ModalRecado({ isModalOpen, setIsModalOpen, reload }) {
       >
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50"></div>
 
-        <div className="bg-white p-8 rounded-xl shadow-xl max-w-xl transform transition duration-300 hover:scale-105 m-1">
+        <div className="bg-white p-8 rounded-xl shadow-xl max-w-xl transform transition duration-300 hover:scale-105 m-3">
           <button
             type="button"
             className="absolute top-0 right-0 p-3 py-2 text-xl hover:text-red-600 "

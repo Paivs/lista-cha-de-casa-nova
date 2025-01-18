@@ -7,6 +7,7 @@ import {
   faGift,
   faWalkieTalkie,
   faPlus,
+  faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import Item from "@/components/Item/item";
 import Recado from "@/components/Recado/recado";
@@ -15,9 +16,12 @@ import ModalComprar from "@/components/modalComprar/modalComprar";
 import { useState, useEffect } from "react";
 import ModalContribuir from "@/components/modalContribuir/modalContribuir";
 import ModalRecado from "@/components/modalRecado/modalRecado";
+import ModalItem from "@/components/modalItem/modalItem";
+import ModalItemPrev from "@/components/modalItemPrev/modalItemPrev";
 
 export default function Home() {
   const [presente, setPresente] = useState({});
+
   const [presentes, setPresentes] = useState([]);
   const [recados, setRecados] = useState([]);
 
@@ -26,6 +30,8 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalContribuirOpen, setIsModalContribuirOpen] = useState(false);
   const [isModalRecadoOpen, setIsModalRecadoOpen] = useState(false);
+  const [isModalItem, setIsModalItem] = useState(false);
+  const [isModalItemPrev, setIsModalItemPrev] = useState(false);
 
   const [section, setSection] = useState("presentes");
 
@@ -65,7 +71,7 @@ export default function Home() {
     console.log("seu nome é: ", localStorage.getItem("nome"));
   }
 
-  function fetchAll(){
+  function fetchAll() {
     fetchPresentes();
     fetchRecados();
     fetchNome();
@@ -78,19 +84,34 @@ export default function Home() {
     fetchNome();
   }, []);
 
-  const filteredPresentes = presentes.filter((presente) => {
-    const matchesSearch = presente.titulo
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesPrice =
-      maxPrice === "" || parseFloat(presente.preco) <= parseFloat(maxPrice);
-    return matchesSearch && matchesPrice;
-  });
+  const filteredPresentes = presentes
+    .sort((a, b) => {
+      if (a.nomePresenteador === nome && b.nomePresenteador !== nome) return -1;
+      if (a.nomePresenteador !== nome && b.nomePresenteador === nome) return 1;
+      return a.estado === "disponivel" ? -1 : b.estado === "disponivel" ? 1 : 0;
+    })
+    .filter((presente) => {
+      const matchesSearch = presente.titulo
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesPrice =
+        maxPrice === "" || parseFloat(presente.preco) <= parseFloat(maxPrice);
+      return matchesSearch && matchesPrice;
+    });
 
   function handleOpenModal(presente) {
-    console.log("cheguei");
     setPresente(presente);
     setIsModalOpen(true);
+  }
+
+  function handleOpenModalItem(presente) {
+    setPresente(presente);
+    setIsModalItem(true);
+  }
+
+  function handleOpenModalItemPrev(presente) {
+    setPresente(presente);
+    setIsModalItemPrev(true);
   }
 
   return (
@@ -100,12 +121,12 @@ export default function Home() {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         reload={fetchAll}
-        />
+      />
 
       <ModalContribuir
         isModalOpen={isModalContribuirOpen}
         setIsModalOpen={setIsModalContribuirOpen}
-        />
+      />
 
       <ModalRecado
         isModalOpen={isModalRecadoOpen}
@@ -113,15 +134,40 @@ export default function Home() {
         reload={fetchAll}
       />
 
+      <ModalItem
+        presente={presente}
+        isModalOpen={isModalItem}
+        setIsModalOpen={setIsModalItem}
+      />
+
+      <ModalItemPrev
+        presente={presente}
+        isModalOpen={isModalItemPrev}
+        setIsModalOpen={setIsModalItemPrev}
+      />
+
+
+
+      {nome && (
+        <h2 className="text-5xl text-center pt-20">
+          {new Date().getHours() < 12
+            ? "Bom dia"
+            : new Date().getHours() < 18
+            ? "Boa tarde"
+            : "Boa noite"}
+          , {nome}
+        </h2>
+      )}
+
       <div className="flex flex-col w-full text-center items-center justify-center pt-16 container mx-auto">
         <img
           src="eu.jpg"
           alt="Logo Lívia e Gustavo"
           className="w-auto h-40 rounded-full"
         />
-        <h1 className="text-center px-2 text-xl md:text-2xl font-bold text-[#374151]">
-          Chá de casa nova da Lívia e do Gustavo
-        </h1>
+        <div className="text-center px-2 text-xl md:text-2xl font-bold text-[#374151]">
+          <h2 className="">Chá de casa nova da Lívia e do Gustavo</h2>
+        </div>
 
         <div className="w-full flex flex-col items-center justify-center gap-2 mt-2">
           <button
@@ -178,7 +224,7 @@ export default function Home() {
             className="flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md"
             onClick={() => {
               setSection("presentes");
-              fetchPresentes()
+              fetchPresentes();
             }}
           >
             <FontAwesomeIcon className="inline w-auto h-8 me-2" icon={faGift} />
@@ -221,12 +267,14 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-3">
               {filteredPresentes.map((presente, index) => (
-                  <Item
-                    key={index}
-                    presente={presente}
-                    isMine={presente.nomePresenteador === nome}
-                    onButtonClick={() => handleOpenModal(presente)}
-                  />
+                <Item
+                  key={index}
+                  presente={presente}
+                  isMine={presente.nomePresenteador === nome}
+                  onButtonClick={() => handleOpenModal(presente)}
+                  onButtonClickAndComprado={() => handleOpenModalItem(presente)}
+                  onTitleClick={() => handleOpenModalItemPrev(presente)}
+                />
               ))}
             </div>
           </div>

@@ -3,6 +3,7 @@
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import PixCopia from "../pixCopia/pixCopia";
 
 export default function ModalContribuir({
   isModalOpen,
@@ -22,7 +23,7 @@ export default function ModalContribuir({
         }`}
       >
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50"></div>
-            <div className="bg-white p-8 rounded-xl shadow-xl max-w-xl transform transition duration-300 hover:scale-105 m-1">
+            <div className="bg-white p-8 rounded-xl shadow-xl max-w-xl transform transition duration-300 hover:scale-105 m-3">
                 <button type="button" className="absolute top-0 right-0 p-3 py-2 text-xl hover:text-red-600 " onClick={handleClose}> <FontAwesomeIcon icon={faClose} /></button>
               <h2 className="text-lg font-bold mb-4">
                 Você pode contribuir com qualquer valor!
@@ -30,12 +31,7 @@ export default function ModalContribuir({
 
               <img src="joinha.png" alt="" />
 
-              <p className="my-4">
-              Chave PIX (NuBank):{" "}
-              <span className="font-bold">gustavo.paiva.gp1@gmail.com</span>
-
-
-            </p>
+            <PixCopia className="my-4" />
 
               <button
                 type="button"

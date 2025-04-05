@@ -8,6 +8,9 @@ import {
   faWalkieTalkie,
   faPlus,
   faQuestion,
+  faInfo,
+  faArrowsSpin,
+  faCheckToSlot,
 } from "@fortawesome/free-solid-svg-icons";
 import Item from "@/components/Item/item";
 import Recado from "@/components/Recado/recado";
@@ -18,6 +21,10 @@ import ModalContribuir from "@/components/modalContribuir/modalContribuir";
 import ModalRecado from "@/components/modalRecado/modalRecado";
 import ModalItem from "@/components/modalItem/modalItem";
 import ModalItemPrev from "@/components/modalItemPrev/modalItemPrev";
+import Faq from "@/components/faq/faq";
+import ModalNome from "@/components/modalNome/modalNome";
+import Splash from "@/components/splash/splash";
+import ModalPresenca from "@/components/modalPresenca/modalPresenca";
 
 export default function Home() {
   const [presente, setPresente] = useState({});
@@ -33,12 +40,48 @@ export default function Home() {
   const [isModalItem, setIsModalItem] = useState(false);
   const [isModalItemPrev, setIsModalItemPrev] = useState(false);
 
+  const [isModalPresenca, setIsModalPresenca] = useState(false);
+
+  const [isModalNome, setIsModalNome] = useState(false);
+  const [reservado, setReservado] = useState(false);
+
   const [section, setSection] = useState("presentes");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
   const handleMaxPriceChange = (e) => setMaxPrice(e.target.value);
+
+  const [faq, setFaq] = useState([
+    {
+      pergunta: "Onde fica o salão?",
+      resposta:
+        "O salão está localizado na Rua Araguaia, 233, Santo André, SP.",
+    },
+    {
+      pergunta: "Qual é o tema da festa?",
+      resposta: "O tema da nossa festa é 'Anos 2000'!",
+    },
+    {
+      pergunta: "Devo ir fantasiado?",
+      resposta: "Sim! Vista-se a caráter para entrar no clima dos anos 2000.",
+    },
+    {
+      pergunta: "Qual é a data e o horário?",
+      resposta:
+        "A festa acontecerá no dia 31 de maio (sábado), das 16:00 às 22:00.",
+    },
+    {
+      pergunta: "Quais serão as opções de refeição?",
+      resposta:
+        "Teremos um cardápio delicioso com lanche de pernil, hot-dog, salgadinhos e docinhos típicos de festas dos anos 2000.",
+    },
+    {
+      pergunta: "Quais serão as bebidas?",
+      resposta:
+        "Vamos servir refrigerantes, sucos e água. Caso queira, pode trazer sua bebida alcoólica!",
+    },
+  ]);
 
   async function fetchPresentes() {
     try {
@@ -75,13 +118,15 @@ export default function Home() {
     fetchPresentes();
     fetchRecados();
     fetchNome();
+    setReservado(localStorage.getItem("presenca"))
   }
 
   useEffect(() => {
     fetchPresentes();
     fetchRecados();
-
     fetchNome();
+
+    setReservado(localStorage.getItem("presenca"))
   }, []);
 
   const filteredPresentes = presentes
@@ -116,6 +161,10 @@ export default function Home() {
 
   return (
     <>
+      <Splash />
+
+      <ModalNome isModalOpen={isModalNome} setIsModalOpen={setIsModalNome} />
+
       <ModalComprar
         presente={presente}
         isModalOpen={isModalOpen}
@@ -146,20 +195,26 @@ export default function Home() {
         setIsModalOpen={setIsModalItemPrev}
       />
 
-
+      <ModalPresenca
+        isModalOpen={isModalPresenca}
+        setIsModalOpen={setIsModalPresenca}
+        reload={fetchAll}
+      />
 
       {nome && (
-        <h2 className="text-5xl text-center pt-20">
-          {new Date().getHours() < 12
-            ? "Bom dia"
-            : new Date().getHours() < 18
-            ? "Boa tarde"
-            : "Boa noite"}
-          , {nome}
-        </h2>
+        <div className=" w-full flex flex-col items-center justify-center gap-2 mt-8">
+          <h2 className="text-3xl text-center">
+            {new Date().getHours() < 12
+              ? "Bom dia"
+              : new Date().getHours() < 18
+                ? "Boa tarde"
+                : "Boa noite"}
+            , {nome}
+          </h2>
+        </div>
       )}
 
-      <div className="flex flex-col w-full text-center items-center justify-center pt-16 container mx-auto">
+      <div className="flex flex-col w-full text-center items-center justify-center mt-8 container mx-auto">
         <img
           src="eu.jpg"
           alt="Logo Lívia e Gustavo"
@@ -182,46 +237,100 @@ export default function Home() {
             Contribuir
           </button>
 
-          <button
-            type="button"
-            className="w-1/2  cursor-pointer bg-white p-1 border border-[#eceef1] h-auto text-center text-md md:text-xl flex items-center justify-center shadow-md"
-            onClick={() => {
-              navigator.clipboard.writeText("livs-e-gu.com.br");
-              alert("Link copiado!");
-            }}
-          >
-            <FontAwesomeIcon
-              className="inline w-auto h-5 md:h-8 me-2"
-              icon={faShare}
-            />
-            Compartilhar
-          </button>
+          <div className="w-1/2 flex flex-col md:flex-row gap-2">
+            <button
+              type="button"
+              className="w-full  cursor-pointer bg-white p-1 border border-[#eceef1] h-auto text-center text-md md:text-xl flex items-center justify-center shadow-md"
+              onClick={() => {
+                navigator.clipboard.writeText("livs-e-gu.com.br");
+                alert("Link copiado!");
+              }}
+            >
+              <FontAwesomeIcon
+                className="inline w-auto h-5 md:h-8 me-2"
+                icon={faShare}
+              />
+              Compartilhar
+            </button>
+
+            <button
+              type="button"
+              className="w-full  cursor-pointer bg-white p-1 border border-[#eceef1] h-auto text-center text-md md:text-xl flex items-center justify-center shadow-md"
+              onClick={() => {
+                setIsModalNome(true);
+              }}
+            >
+              <FontAwesomeIcon
+                className="inline w-auto h-5 md:h-8 me-2"
+                icon={faArrowsSpin}
+              />
+              Mudar nome
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="mt-4 flex flex-col items-center justify-center w-full px-1 md:px-2">
         <div className="flex flex-col gap-3 bg-[#ffffff] w-full md:w-2/3 p-4 shadow-sm">
           <p className="text-lg md:text-xl font-light">
-            Nesse nosso vigésimo primeiro aniversário decidimos montar nossa
-            própria casinha. Ficamos felizes e aguardamos sua presença e, se
-            possível, uma contribuição para nosso novo lar!
+            No nosso 21º aniversário, decidimos dar um grande passo e montar nosso cantinho juntos! Estamos muito felizes e queremos compartilhar esse momento especial com você. Contamos com sua presença na nossa festa e, se desejar, com uma contribuição para o nosso novo lar!
           </p>
 
           <div className="pb-2 text-center">
-            <h2 className="text-2xl font-bold">
-              Rua Araguaia, 233 - Santo André, SP
-            </h2>
-            <p className="text-xl font-light">Sábado, 31 de maio de 2025</p>
-            <p className="text-xl font-light">14:00</p>
+
+            <div className="flex md:flex-row flex-col  gap-8 justify-center ">
+
+              <div className="">
+                <h2 className="text-xl font-bold">
+                  Rua Araguaia, 233 - Santo André, SP
+                </h2>
+                <p className="text-lg font-light">
+                  Evento: Sábado, 31 de maio de 2025 - 17:00
+                </p>
+              </div>
+
+              <div className="">
+                <h2 className="text-xl font-bold">
+                R. Almada, 495 - Jardim Santo Alberto, SP
+                </h2>
+                <p className="text-lg font-light">
+                  Endereço para entrega de presentes
+                </p>
+              </div>
+            </div>
+
+            <div className="flex w-full h-auto justify-center items-center mt-4">
+              <button
+                type="button"
+                className={`flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md transition duration-300 text-green-400 font-bold`}
+                disabled={reservado}
+                onClick={() => {
+                  setIsModalPresenca(true);
+                }}
+              >
+                <FontAwesomeIcon
+                  className="inline w-auto h-8 me-2 "
+                  icon={faCheckToSlot}
+                />
+                {reservado ? (<>
+                  Já confirmado
+                </>) : (<>
+                  Confirmar presença
+                </>)}
+
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
 
       <section className="container mx-auto px-3 my-4">
         <div className="flex flex-col md:flex-row gap-4">
           <button
             type="button"
-            className="flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md"
+            className={`flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md ${section === "presentes" ? "bg-[#dadbdd]" : ""
+              }`}
             onClick={() => {
               setSection("presentes");
               fetchPresentes();
@@ -233,7 +342,8 @@ export default function Home() {
 
           <button
             type="button"
-            className="flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md"
+            className={`flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md ${section === "recados" ? "bg-[#dadbdd]" : ""
+              }`}
             onClick={() => {
               setSection("recados");
               fetchRecados();
@@ -244,6 +354,19 @@ export default function Home() {
               icon={faWalkieTalkie}
             />
             Recados
+          </button>
+
+          <button
+            type="button"
+            className={`flex items-center justify-center w-full md:w-fit cursor-pointer bg-white px-4 py-2 border border-[#eceef1] h-auto text-center text-xl shadow-md ${section === "informacoes" ? "bg-[#dadbdd]" : ""
+              }`}
+            onClick={() => {
+              setSection("informacoes");
+              fetchRecados();
+            }}
+          >
+            <FontAwesomeIcon className="inline w-auto h-8 me-2" icon={faInfo} />
+            Informações
           </button>
         </div>
 
@@ -257,14 +380,15 @@ export default function Home() {
                 onChange={handleSearchChange}
                 className="border p-2 mb-2 sm:mb-0 sm:mr-2 grow shadow-sm"
               />
-              <input
+              {/* <input
                 type="number"
                 placeholder="Preço máximo"
                 value={maxPrice}
                 onChange={handleMaxPriceChange}
                 className="border p-2 shadow-sm"
-              />
+              /> */}
             </div>
+            <p>Preços sujeitos a mudança!</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-3">
               {filteredPresentes.map((presente, index) => (
                 <Item
@@ -309,9 +433,61 @@ export default function Home() {
             </div>
           </>
         ) : null}
+
+        {section === "informacoes" ? (
+          <>
+            <div className="container p-2 px-2 lg:px-8 flex flex-col gap-2 my-4">
+              <h2 className="font-bold text-4xl md:text-6xl">Sobre a festa</h2>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="col-span-2 lg:col-span-1">
+                  {faq.map((item, index) => (
+                    <Faq
+                      key={index}
+                      pergunta={item.pergunta}
+                      resposta={item.resposta}
+                    />
+                  ))}
+                </div>
+
+                <div className="col-span-2 lg:col-span-1 w-full flex items-center justify-center m-3">
+                  <img
+                    src="convite.jpg"
+                    alt=""
+                    className=" max-h-[95vh] self-center"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="container p-2 px-4 flex flex-col gap-2 my-4 text-[#a44141]">
+              <h2 className="font-bold text-4xl md:text-6xl">
+                Sobre a entrega dos presentes
+              </h2>
+              <p className="text-xl">
+                É possível realizar a entrega no dia da festa ou enviar
+                anteriormente para o seguinte endereço <br />
+                Endereço para entrega de presentes:
+              </p>
+
+              <p className="text-xl font-bold">
+                R. Almada, 495 - Jardim Santo Alberto
+              </p>
+
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.271881396531!2d-46.4952761!3d-23.630432399999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce686b1b133761%3A0x9a4580d9617a99a0!2sR.%20Almada%2C%20495%20-%20Jardim%20Santo%20Alberto%2C%20Santo%20Andr%C3%A9%20-%20SP%2C%2009260-420!5e0!3m2!1spt-BR!2sbr!4v1737325258455!5m2!1spt-BR!2sbr"
+                width="100%"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </>
+        ) : null}
       </section>
 
-      <div className="mx-2 my-8">
+      <div className="px-0 md:px-2 my-8">
         <p className="text-center text-lg font-light">
           Desenvolvida por{" "}
           <a

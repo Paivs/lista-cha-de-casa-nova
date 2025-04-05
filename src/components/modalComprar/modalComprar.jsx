@@ -99,15 +99,16 @@ export default function ModalComprar({
             <div className="bg-white p-8 rounded-xl shadow-xl max-w-xl transform transition duration-300 hover:scale-105 m-3">
                 <button type="button" className="absolute top-0 right-0 p-3 py-2 text-xl hover:text-red-600 " onClick={handleClose}> <FontAwesomeIcon icon={faClose} /></button>
               <h2 className="text-lg font-bold mb-4">
-                Vamos reservar seu presente!
+                Reservando o presente!
               </h2>
-
+{/* 
               <div className="flex flex-col mb-4">
                 <label className="">Seu nome:</label>
                 <input
                   type="text"
                   name="nome"
-                  id=""
+                  id="nome"
+                  disabled="true"
                   placeholder="Digite seu nome e sobrenome"
                   className="border border-gray-200 p-2 rounded-xl"
                   value={nome}
@@ -128,8 +129,12 @@ export default function ModalComprar({
                 />
                 <p className="text-sm text-gray-300">
                   Assim que reservar não é possível retornar o presente, <br />
-                  ele ficará indisponível para as outras pessoas
+                  Caso queira mudar o nome, uso o botão do menu
                 </p>
+              </div> */}
+
+              <div className="flex flex-col mb-4">
+                <p>O presente: <span className="font-bold">{presente.titulo}</span> <br/>  será reservado no nome de <span className="font-bold">{nome}</span></p>
               </div>
 
               <div className="flex flex-col mb-4">
@@ -195,7 +200,7 @@ export default function ModalComprar({
 
             <PixCopia/>
 
-            <button type="button">
+            <button type="button mt-4">
               <a
                 href={presente.link}
                 target="_blank"
@@ -203,7 +208,7 @@ export default function ModalComprar({
               >
                 Acessar a loja
               </a>
-            </button>
+            </button> 
           </div>
         ) : null}
       </div>

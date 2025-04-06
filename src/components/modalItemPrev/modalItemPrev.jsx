@@ -66,7 +66,7 @@ export default function ModalItemPrev({
                 <span className="font-bold">selecionar</span>
               </p>
               <p>
-                Valor: <span className="font-bold">R$ {presente.preco}</span>
+                Valor: <span className="font-bold">{presente.preco}</span>
               </p>
             </div>
 

@@ -33,7 +33,7 @@ export default function Item({
       </div>
 
       <button type="button" className="text-left" onClick={onTitleClick}>
-        <h2 className="text-xl font-bold text-wrap overflow-hidden text-ellipsis whitespace-nowrap max-lines-2">
+        <h2 className="text-xl font-bold">
           {presente.titulo}
         </h2>
       </button>

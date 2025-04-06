@@ -10,6 +10,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 export async function GET(req) {
   try {
     await client.connect();
+    console.log('Conexao o com o MongoDB realizada com sucesso!');
     const database = client.db('listaDB');
     const collection = database.collection('presentes');
     const presentes = await collection.find({}).toArray();

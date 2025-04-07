@@ -13,6 +13,9 @@ FROM node:18-alpine AS production
 WORKDIR /app
 ENV NODE_ENV=production
 
+# Instala curl para o healthcheck
+RUN apk add --no-cache curl
+
 # Copia apenas o necessário da etapa de builder
 COPY --from=builder /app/package.json /app/package-lock.json ./
 COPY --from=builder /app/.next ./.next

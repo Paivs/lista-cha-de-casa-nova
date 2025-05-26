@@ -74,7 +74,7 @@ export default function Home() {
     {
       pergunta: "Quais serão as opções de refeição?",
       resposta:
-        "Teremos um cardápio delicioso com lanche de pernil, hot-dog, salgadinhos e docinhos típicos de festas dos anos 2000.",
+        "Salgadinhos de festa, batatinha temperada, salada, macarrão ao molho sugo, branco ou sem molho. Doces, bolos e outras surpresas à parte! ",
     },
     {
       pergunta: "Quais serão as bebidas?",
